@@ -1,0 +1,19 @@
+# Maven build output
+target/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Sensitive - never commit real credentials
+# db.properties is included but with placeholder values
