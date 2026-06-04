@@ -16,4 +16,4 @@ Thumbs.db
 *.log
 
 # Sensitive - never commit real credentials
-# db.properties is included but with placeholder values
+src/main/resources/db.properties

@@ -1,0 +1,12 @@
+# ============================================================
+# Database configuration template
+# Copy this file to db.properties and fill in your values:
+#   copy src\main\resources\db.properties.template src\main\resources\db.properties
+# db.properties is in .gitignore so your credentials stay local.
+# ============================================================
+
+db.url=jdbc:mysql://localhost:3306/guacamole_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+db.user=guacamole_user
+db.password=YOUR_PASSWORD_HERE
+db.pool.maxSize=10
+db.pool.minIdle=2

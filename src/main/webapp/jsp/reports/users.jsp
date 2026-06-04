@@ -12,10 +12,7 @@
 <div class="layout">
   <jsp:include page="/jsp/layout/sidebar.jsp"/>
   <div class="main">
-    <div class="topbar">
-      <span class="topbar-title">User Details</span>
-      <span class="topbar-user">${sessionScope.loggedInUser}</span>
-    </div>
+    <jsp:include page="/jsp/layout/topbar.jsp"><jsp:param name="title" value="User Details"/></jsp:include>
     <div class="content">
 
       <c:if test="${not empty errorMessage}">

@@ -50,7 +50,8 @@ public class RoleFilter implements Filter {
 
         // Public paths — skip role check (AuthFilter already handles these)
         if (path.startsWith("/login") || path.startsWith("/css") ||
-            path.startsWith("/js")    || path.startsWith("/logout")) {
+            path.startsWith("/js")    || path.startsWith("/logout") ||
+            path.startsWith("/profile")) {
             chain.doFilter(request, response);
             return;
         }

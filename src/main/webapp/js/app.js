@@ -1,9 +1,40 @@
-﻿/**
- * Guacamole Admin — Frontend JS
- * Pure vanilla JS, no frameworks.
- */
+﻿'use strict';
 
-'use strict';
+// ── Mobile sidebar toggle ────────────────────────────────────────────────────
+(function initMobileMenu() {
+  const toggle   = document.getElementById('menu-toggle');
+  const sidebar  = document.querySelector('.sidebar');
+  const overlay  = document.getElementById('sidebar-overlay');
+
+  if (!toggle || !sidebar) return;
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    document.body.style.overflow = 'hidden'; // prevent background scroll
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', function () {
+    sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+
+  if (overlay) {
+    overlay.addEventListener('click', closeSidebar);
+  }
+
+  // Close sidebar when a nav link is tapped on mobile
+  sidebar.querySelectorAll('nav a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (window.innerWidth <= 700) closeSidebar();
+    });
+  });
+})();
 
 // ── Auto-refresh for Active Sessions page ────────────────────────────────────
 (function initAutoRefresh() {
@@ -14,9 +45,7 @@
 
   function tick() {
     indicator.textContent = 'Refreshing in ' + countdown + 's';
-    if (countdown <= 0) {
-      window.location.reload();
-    }
+    if (countdown <= 0) window.location.reload();
     countdown--;
   }
 
@@ -29,14 +58,13 @@
   const input = document.getElementById('table-search');
   if (!input) return;
 
-  const table = document.querySelector('table tbody');
-  if (!table) return;
+  const tbody = document.querySelector('table tbody');
+  if (!tbody) return;
 
   input.addEventListener('input', function () {
     const query = this.value.toLowerCase();
-    Array.from(table.rows).forEach(function (row) {
-      const text = row.textContent.toLowerCase();
-      row.style.display = text.includes(query) ? '' : 'none';
+    Array.from(tbody.rows).forEach(function (row) {
+      row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
     });
   });
 })();
@@ -45,19 +73,23 @@
 document.addEventListener('click', function (e) {
   const btn = e.target.closest('[data-confirm]');
   if (!btn) return;
-  if (!window.confirm(btn.dataset.confirm)) {
-    e.preventDefault();
-  }
+  if (!window.confirm(btn.dataset.confirm)) e.preventDefault();
 });
 
 // ── Highlight active sidebar link ────────────────────────────────────────────
 (function highlightNav() {
-  const path = window.location.pathname + window.location.search;
+  const path   = window.location.pathname;
+  const search = window.location.search;
+  const full   = path + search;
+
   document.querySelectorAll('.sidebar nav a').forEach(function (link) {
-    const href = link.getAttribute('href');
-    if (href && path.includes(href.split('?')[0]) &&
-        (link.href === window.location.href ||
-         (href.includes('type=') && path.includes(href.split('type=')[1])))) {
+    const href = link.getAttribute('href') || '';
+    if (!href || href === '#') return;
+
+    const hPath   = href.split('?')[0];
+    const hSearch = href.includes('?') ? href.split('?')[1] : '';
+
+    if (path.endsWith(hPath) && (!hSearch || search.includes(hSearch))) {
       link.classList.add('active');
     }
   });
@@ -72,9 +104,7 @@ document.addEventListener('click', function (e) {
       const from = new Date();
       from.setDate(from.getDate() - days);
 
-      const fmt = function (d) {
-        return d.toISOString().split('T')[0];
-      };
+      const fmt = function (d) { return d.toISOString().split('T')[0]; };
 
       const fromInput = document.getElementById('from');
       const toInput   = document.getElementById('to');

@@ -150,6 +150,19 @@ public class UserService {
         return null;
     }
 
+    // ── Change own password ───────────────────────────────────────────────────
+
+    /**
+     * Updates the password hash for the given admin id.
+     * Called from ProfileServlet for self-service password change.
+     */
+    public void changeOwnPassword(int id, String newPasswordHash, String actor)
+            throws SQLException {
+        adminUserDao.updatePassword(id, newPasswordHash);
+        AuditLogger.log(actor, "CHANGE_PASSWORD", actor,
+                "Self-service password change", null);
+    }
+
     // ── Guacamole user list (read-only) ───────────────────────────────────────
 
     public List<User> getAllGuacamoleUsers() throws SQLException {

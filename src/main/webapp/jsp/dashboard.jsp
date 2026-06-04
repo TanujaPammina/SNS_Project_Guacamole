@@ -13,17 +13,7 @@
   <jsp:include page="/jsp/layout/sidebar.jsp"/>
 
   <div class="main">
-    <div class="topbar">
-      <span class="topbar-title">Dashboard</span>
-      <span class="topbar-user">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-        ${sessionScope.currentUser.username}
-        <span class="badge badge-info" style="margin-left:4px">${sessionScope.currentUser.roleDisplayName}</span>
-      </span>
-    </div>
+    <jsp:include page="/jsp/layout/topbar.jsp"><jsp:param name="title" value="Dashboard"/></jsp:include>
 
     <div class="content">
 
@@ -51,7 +41,7 @@
       <div class="card">
         <div class="card-header"><h2>Reports</h2></div>
         <div class="card-body">
-          <div class="stat-grid">
+        <div class="report-grid">
             <a class="btn btn-outline" href="${pageContext.request.contextPath}/reports?type=active-sessions">Active Sessions</a>
             <a class="btn btn-outline" href="${pageContext.request.contextPath}/reports?type=historical-logs">Historical Logs</a>
             <a class="btn btn-outline" href="${pageContext.request.contextPath}/users">User Details</a>

@@ -12,10 +12,7 @@
 <div class="layout">
   <jsp:include page="/jsp/layout/sidebar.jsp"/>
   <div class="main">
-    <div class="topbar">
-      <span class="topbar-title">Failed Login Attempts</span>
-      <span class="topbar-user">${sessionScope.loggedInUser}</span>
-    </div>
+    <jsp:include page="/jsp/layout/topbar.jsp"><jsp:param name="title" value="Failed Login Attempts"/></jsp:include>
     <div class="content">
 
       <!-- Summary cards -->

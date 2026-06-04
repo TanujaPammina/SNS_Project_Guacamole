@@ -12,10 +12,7 @@
 <div class="layout">
   <jsp:include page="/jsp/layout/sidebar.jsp"/>
   <div class="main">
-    <div class="topbar">
-      <span class="topbar-title">Access Denied</span>
-      <span class="topbar-user">${sessionScope.currentUser.username}</span>
-    </div>
+    <jsp:include page="/jsp/layout/topbar.jsp"><jsp:param name="title" value="Access Denied"/></jsp:include>
     <div class="content">
       <div class="card" style="max-width:520px;margin:40px auto">
         <div class="card-body" style="text-align:center;padding:48px 32px">

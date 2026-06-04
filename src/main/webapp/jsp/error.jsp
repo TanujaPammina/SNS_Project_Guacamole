@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Error — Guacamole Admin</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 </head>
@@ -11,10 +12,7 @@
 <div class="layout">
   <jsp:include page="/jsp/layout/sidebar.jsp"/>
   <div class="main">
-    <div class="topbar">
-      <span class="topbar-title">Error</span>
-      <span class="topbar-user">${sessionScope.loggedInUser}</span>
-    </div>
+    <jsp:include page="/jsp/layout/topbar.jsp"><jsp:param name="title" value="Error"/></jsp:include>
     <div class="content">
       <div class="alert alert-danger">
         <strong>An error occurred:</strong>

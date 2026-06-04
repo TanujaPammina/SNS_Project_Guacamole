@@ -1,0 +1,35 @@
+services:
+
+  guacd:
+    image: guacamole/guacd:1.5.4
+    container_name: guacd
+    restart: unless-stopped
+    networks:
+      guac-net:
+        aliases:
+          - guacd
+
+  guacamole:
+    image: guacamole/guacamole:1.5.4
+    container_name: guacamole
+    restart: unless-stopped
+    depends_on:
+      - guacd
+    ports:
+      - "8081:8080"
+    environment:
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT:     "4822"
+      MYSQL_HOSTNAME: host.docker.internal
+      MYSQL_PORT:     "3306"
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER:     guacamole_user
+      MYSQL_PASSWORD: StrongPass123!
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - guac-net
+
+networks:
+  guac-net:
+    driver: bridge
