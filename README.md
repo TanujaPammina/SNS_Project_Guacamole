@@ -147,9 +147,8 @@ src/main/webapp/
 └── js/app.js
 
 src/main/resources/
-├── db.properties          Database connection config
-├── schema-audit.sql       Creates admin_users + audit_log tables
-└── guacamole-schema.sql   Creates Guacamole tables with sample data
+├── db.properties.template     Copy to db.properties and fill in your password
+├── schema-audit.sql           STEP 2 — Creates admin_users + audit_log tables
 ```
 
 ---
@@ -179,11 +178,13 @@ USE guacamole_db;
 Then run the two schema files in order:
 
 ```
-src/main/resources/guacamole-schema.sql   ← creates Guacamole tables + sample data
-src/main/resources/schema-audit.sql       ← creates admin_users + audit_log tables
+Step 1: deploy/guacamole-official-schema.sql   ← Guacamole tables + default admin user
+Step 2: src/main/resources/schema-audit.sql    ← Admin portal tables (admin_users, audit_log)
 ```
 
-Copy the contents of each file, paste into MySQL Workbench, and click Execute.
+Open each file in MySQL Workbench (**File → Open SQL Script**), then click ⚡ Execute.
+
+> After running schema-audit.sql, default login is: `superadmin` / `Admin@1234`
 
 ---
 

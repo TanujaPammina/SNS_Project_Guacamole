@@ -1,7 +1,18 @@
 -- ============================================================
 -- Guacamole Admin — Supplementary Schema  v2.0
+-- ============================================================
+-- STEP 2 of 2 — Run this AFTER guacamole-official-schema.sql
+--
 -- Run this ONCE against your guacamole_db database.
--- Does NOT modify any existing Apache Guacamole tables.
+-- Creates the admin portal tables (does NOT touch Guacamole tables).
+--
+-- Tables created:
+--   admin_users       — admin portal accounts with roles
+--   admin_audit_log   — audit trail of all admin actions
+--
+-- Default login after running:
+--   Username: superadmin
+--   Password: Admin@1234  ← CHANGE THIS after first login
 -- ============================================================
 
 -- ── 1. Admin Users ────────────────────────────────────────────
