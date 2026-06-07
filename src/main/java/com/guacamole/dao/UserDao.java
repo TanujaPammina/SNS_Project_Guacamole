@@ -19,7 +19,7 @@ public class UserDao {
     public String findPasswordHash(String username) throws SQLException {
         String sql = "SELECT gu.password_hash " +
                      "FROM guacamole_entity ge " +
-                     "JOIN guacamole_user gu ON gu.entity_id = ge.entity_id " +
+                     "LEFT JOIN guacamole_user gu ON gu.entity_id = ge.entity_id " +
                      "WHERE ge.name = ? AND ge.type = 'USER'";
 
         try (Connection conn = DbUtil.getConnection();
@@ -64,7 +64,7 @@ public class UserDao {
                      "       gu.full_name, gu.email_address, " +
                      "       MAX(uh.start_date) AS last_active " +
                      "FROM guacamole_entity ge " +
-                     "JOIN guacamole_user gu ON gu.entity_id = ge.entity_id " +
+                     "LEFT JOIN guacamole_user gu ON gu.entity_id = ge.entity_id " +
                      "LEFT JOIN guacamole_user_history uh ON uh.user_id = gu.user_id " +
                      "WHERE ge.name = ? AND ge.type = 'USER' " +
                      "GROUP BY ge.entity_id, ge.name, gu.disabled, gu.expired, " +
@@ -87,8 +87,20 @@ public class UserDao {
         u.setUsername(rs.getString("username"));
         u.setDisabled(rs.getBoolean("disabled"));
         u.setExpired(rs.getBoolean("expired"));
-        u.setFullName(rs.getString("full_name"));
-        u.setEmail(rs.getString("email_address"));
+        String fullName = rs.getString("full_name");
+        String email = rs.getString("email_address");
+
+        u.setFullName(
+                fullName != null && !fullName.isBlank()
+                ? fullName
+                : "Not Provided"
+        );
+
+        u.setEmail(
+                email != null && !email.isBlank()
+                ? email
+                : "Not Provided"
+        );
 
         Timestamp ts = rs.getTimestamp("last_active");
         if (ts != null) u.setLastActive(ts.toLocalDateTime());
