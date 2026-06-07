@@ -63,19 +63,19 @@ public class SessionDao {
         List<Object> params = new ArrayList<>();
 
         if (username != null && !username.isBlank()) {
-            sql.append("AND ge.name = ? ");
-            params.add(username);
+            sql.append("AND ge.name LIKE ? ");
+            params.add("%" + username.trim() + "%");
         }
         if (fromDate != null && !fromDate.isBlank()) {
             sql.append("AND DATE(h.start_date) >= ? ");
-            params.add(fromDate);
+            params.add(fromDate.trim());
         }
         if (toDate != null && !toDate.isBlank()) {
             sql.append("AND DATE(h.start_date) <= ? ");
-            params.add(toDate);
+            params.add(toDate.trim());
         }
 
-        sql.append("ORDER BY h.start_date DESC LIMIT 1000");
+        sql.append("ORDER BY h.start_date DESC LIMIT 500");
 
         try (Connection conn = DbUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
