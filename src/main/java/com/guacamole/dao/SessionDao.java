@@ -22,18 +22,29 @@ public class SessionDao {
     /**
      * Returns sessions that have no end_date (currently active tunnels).
      */
-    public List<ActiveSession> findActiveSessions() throws SQLException {
-        String sql = "SELECT h.history_id, ge.name AS username, " +
-                     "       c.connection_name, h.remote_host, " +
-                     "       h.start_date, h.end_date " +
-                     "FROM guacamole_connection_history h " +
-                     "JOIN guacamole_entity ge ON ge.entity_id = h.user_id " +
-                     "JOIN guacamole_connection c  ON c.connection_id = h.connection_id " +
-                     "WHERE h.end_date IS NULL " +
-                     "ORDER BY h.start_date DESC";
+	/**
+	 * Returns currently active Guacamole sessions.
+	 * Calculates live duration and keeps records even if
+	 * the connection was removed later.
+	 */
+	public List<ActiveSession> findActiveSessions() throws SQLException {
 
-        return querySessionList(sql);
-    }
+	    String sql =
+	            "SELECT h.history_id, " +
+	            "       ge.name AS username, " +
+	            "       COALESCE(c.connection_name, 'Deleted Connection') AS connection_name, " +
+	            "       h.remote_host, " +
+	            "       h.start_date, " +
+	            "       h.end_date, " +
+	            "       TIMESTAMPDIFF(SECOND, h.start_date, NOW()) AS duration_seconds " +
+	            "FROM guacamole_connection_history h " +
+	            "JOIN guacamole_entity ge ON ge.entity_id = h.user_id " +
+	            "LEFT JOIN guacamole_connection c ON c.connection_id = h.connection_id " +
+	            "WHERE h.end_date IS NULL " +
+	            "ORDER BY h.start_date DESC";
+
+	    return querySessionList(sql);
+	}
 
     // -----------------------------------------------------------------------
     // Report 2 — Historical Logs
@@ -63,19 +74,19 @@ public class SessionDao {
         List<Object> params = new ArrayList<>();
 
         if (username != null && !username.isBlank()) {
-            sql.append("AND ge.name = ? ");
-            params.add(username);
+            sql.append("AND ge.name LIKE ? ");
+            params.add("%" + username.trim() + "%");
         }
         if (fromDate != null && !fromDate.isBlank()) {
             sql.append("AND DATE(h.start_date) >= ? ");
-            params.add(fromDate);
+            params.add(fromDate.trim());
         }
         if (toDate != null && !toDate.isBlank()) {
             sql.append("AND DATE(h.start_date) <= ? ");
-            params.add(toDate);
+            params.add(toDate.trim());
         }
 
-        sql.append("ORDER BY h.start_date DESC LIMIT 1000");
+        sql.append("ORDER BY h.start_date DESC LIMIT 500");
 
         try (Connection conn = DbUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {

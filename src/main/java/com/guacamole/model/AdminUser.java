@@ -19,6 +19,8 @@ public class AdminUser {
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
     private String        createdBy;
+    private String        resetToken;
+    private LocalDateTime resetTokenExpiry;
 
     public AdminUser() {}
 
@@ -53,6 +55,12 @@ public class AdminUser {
 
     public String getCreatedBy()                    { return createdBy; }
     public void setCreatedBy(String createdBy)      { this.createdBy = createdBy; }
+
+    public String getResetToken()                           { return resetToken; }
+    public void setResetToken(String resetToken)            { this.resetToken = resetToken; }
+
+    public LocalDateTime getResetTokenExpiry()                      { return resetTokenExpiry; }
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) { this.resetTokenExpiry = resetTokenExpiry; }
 
     // ── Convenience helpers ──────────────────────────────────────────────────
 

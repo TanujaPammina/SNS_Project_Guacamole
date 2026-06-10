@@ -18,7 +18,8 @@ public class AuthFilter implements Filter {
 
     /** Paths that bypass authentication entirely. */
     private static final String[] PUBLIC_PATHS = {
-        "/login", "/css/", "/js/", "/favicon.ico"
+        "/login", "/css/", "/js/", "/favicon.ico",
+        "/forgot-password", "/reset-password"
     };
 
     @Override
