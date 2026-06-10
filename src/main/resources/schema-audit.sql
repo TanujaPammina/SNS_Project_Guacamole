@@ -1,21 +1,21 @@
+﻿-- ============================================================
+-- Guacamole Admin â€” Supplementary Schema  v2.0
 -- ============================================================
--- Guacamole Admin — Supplementary Schema  v2.0
--- ============================================================
--- STEP 2 of 2 — Run this AFTER guacamole-official-schema.sql
+-- STEP 2 of 2 â€” Run this AFTER guacamole-official-schema.sql
 --
 -- Run this ONCE against your guacamole_db database.
 -- Creates the admin portal tables (does NOT touch Guacamole tables).
 --
 -- Tables created:
---   admin_users       — admin portal accounts with roles
---   admin_audit_log   — audit trail of all admin actions
+--   admin_users       â€” admin portal accounts with roles
+--   admin_audit_log   â€” audit trail of all admin actions
 --
 -- Default login after running:
 --   Username: superadmin
---   Password: Admin@1234  ← CHANGE THIS after first login
+--   Password: Admin@1234  â† CHANGE THIS after first login
 -- ============================================================
 
--- ── 1. Admin Users ────────────────────────────────────────────
+-- â”€â”€ 1. Admin Users â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- Stores accounts for this admin portal (separate from Guacamole users).
 -- Roles: SUPER_ADMIN | ADMIN | AUDITOR
 
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS admin_users (
   COMMENT='Admin portal user accounts with role-based access control';
 
 
--- ── 2. Default Super Admin ────────────────────────────────────
--- Password: Admin@1234  (BCrypt hash — CHANGE THIS IMMEDIATELY after first login)
+-- â”€â”€ 2. Default Super Admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Password: Admin@1234  (BCrypt hash â€” CHANGE THIS IMMEDIATELY after first login)
 INSERT IGNORE INTO admin_users
     (username, password_hash, full_name, role, active, created_by)
 VALUES (
@@ -54,7 +54,7 @@ VALUES (
 );
 
 
--- ── 3. Audit Log ──────────────────────────────────────────────
+-- â”€â”€ 3. Audit Log â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- Records every administrative action performed via this portal.
 
 CREATE TABLE IF NOT EXISTS admin_audit_log (
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS admin_audit_log (
   COMMENT='Audit trail for all administrative actions';
 
 
--- ── Action Code Reference ─────────────────────────────────────
+-- â”€â”€ Action Code Reference â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- LOGIN              Successful login
 -- LOGIN_FAILED       Failed login attempt
 -- LOGIN_BLOCKED      Login blocked (inactive account)

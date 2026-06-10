@@ -1,12 +1,25 @@
 # ============================================================
-# Database configuration template
-# Copy this file to db.properties and fill in your values:
-#   copy src\main\resources\db.properties.template src\main\resources\db.properties
-# db.properties is in .gitignore so your credentials stay local.
+# Guacamole Admin — Configuration Template
+# Copy to db.properties and fill in your values:
+#   Windows: copy src\main\resources\db.properties.template src\main\resources\db.properties
+#   Linux:   cp src/main/resources/db.properties.template src/main/resources/db.properties
+#
+# db.properties is in .gitignore — your credentials stay local.
 # ============================================================
 
+# ── Database ──────────────────────────────────────────────────
 db.url=jdbc:mysql://localhost:3306/guacamole_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
 db.user=guacamole_user
-db.password=YOUR_PASSWORD_HERE
+db.password=YOUR_DB_PASSWORD_HERE
 db.pool.maxSize=10
 db.pool.minIdle=2
+
+# ── Email (for password reset + security alerts) ──────────────
+# For Gmail: use App Password (not your Gmail password)
+# Generate at: https://myaccount.google.com/apppasswords
+guac.mail.host=smtp.gmail.com
+guac.mail.port=587
+guac.mail.user=YOUR_EMAIL@gmail.com
+guac.mail.password=YOUR_APP_PASSWORD_HERE
+guac.mail.from=YOUR_EMAIL@gmail.com
+guac.mail.to=ADMIN_ALERT_EMAIL@example.com
