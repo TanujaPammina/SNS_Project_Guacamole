@@ -154,6 +154,61 @@ public class AdminUserDao {
         }
     }
 
+    // ── Password Reset ────────────────────────────────────────────────────────
+
+    /** Finds a user by their email address. */
+    public AdminUser findByEmail(String email) throws SQLException {
+        String sql = "SELECT id, username, password_hash, full_name, email, " +
+                     "       role, active, created_at, last_login_at, created_by, " +
+                     "       reset_token, reset_token_expiry " +
+                     "FROM admin_users WHERE email = ?";
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? map(rs) : null;
+            }
+        }
+    }
+
+    /** Finds a user by their reset token. */
+    public AdminUser findByResetToken(String token) throws SQLException {
+        String sql = "SELECT id, username, password_hash, full_name, email, " +
+                     "       role, active, created_at, last_login_at, created_by, " +
+                     "       reset_token, reset_token_expiry " +
+                     "FROM admin_users WHERE reset_token = ?";
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? map(rs) : null;
+            }
+        }
+    }
+
+    /** Saves a reset token and expiry for the given user id. */
+    public void saveResetToken(int id, String token, java.time.LocalDateTime expiry)
+            throws SQLException {
+        String sql = "UPDATE admin_users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?";
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ps.setObject(2, expiry);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+        }
+    }
+
+    /** Clears the reset token after successful password reset. */
+    public void clearResetToken(int id) throws SQLException {
+        String sql = "UPDATE admin_users SET reset_token = NULL, reset_token_expiry = NULL WHERE id = ?";
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
     // ── Mapping ───────────────────────────────────────────────────────────────
 
     private AdminUser map(ResultSet rs) throws SQLException {
@@ -172,6 +227,13 @@ public class AdminUserDao {
 
         Timestamp lastLogin = rs.getTimestamp("last_login_at");
         if (lastLogin != null) u.setLastLoginAt(lastLogin.toLocalDateTime());
+
+        // Reset token fields (may not exist in older schema — handle gracefully)
+        try {
+            u.setResetToken(rs.getString("reset_token"));
+            Timestamp exp = rs.getTimestamp("reset_token_expiry");
+            if (exp != null) u.setResetTokenExpiry(exp.toLocalDateTime());
+        } catch (SQLException ignored) {}
 
         return u;
     }

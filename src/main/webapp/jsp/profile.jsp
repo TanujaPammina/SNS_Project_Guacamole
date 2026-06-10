@@ -112,5 +112,16 @@
   </div>
 </div>
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
-</body>
-</html>
+<script>
+function togglePwd(fieldId, iconId) {
+  var f = document.getElementById(fieldId);
+  var i = document.getElementById(iconId);
+  if (f.type === 'password') {
+    f.type = 'text';
+    i.innerHTML = '<line x1="1" y1="1" x2="23" y2="23"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M6.53 6.53A10.35 10.35 0 0 0 1 12s4 8 11 8a9.13 9.13 0 0 0 5.47-1.84"/>';
+  } else {
+    f.type = 'password';
+    i.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+</script>

@@ -62,6 +62,19 @@ public class DbUtil {
             if (is != null) {
                 props.load(is);
                 System.out.println("[DbUtil] Loaded db.properties from classpath.");
+
+                // Push mail properties into system properties so EmailNotifier picks them up
+                String[] mailKeys = {
+                    "guac.mail.host", "guac.mail.port", "guac.mail.user",
+                    "guac.mail.password", "guac.mail.from", "guac.mail.to"
+                };
+                for (String key : mailKeys) {
+                    String val = props.getProperty(key);
+                    if (val != null && !val.isBlank()
+                            && !val.startsWith("YOUR_")) {
+                        System.setProperty(key, val);
+                    }
+                }
             } else {
                 System.out.println("[DbUtil] db.properties not found — using defaults.");
             }
