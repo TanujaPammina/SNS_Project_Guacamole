@@ -37,7 +37,7 @@ class RoleAccessSeleniumTest extends BaseSeleniumTest {
     void superAdmin_canAccessManageAdmins() {
         login(SUPER_ADMIN_USER, SUPER_ADMIN_PASS);
         driver.get(BASE_URL + "/admin/users");
-        wait.until(ExpectedConditions.urlContains("/admin/users"));
+        waitForElement(By.tagName("table"));
         assertTrue(pageContains("Admin Accounts"), "Manage Admins page should load");
         assertTrue(pageContains("superadmin"),      "Should see superadmin in list");
     }
