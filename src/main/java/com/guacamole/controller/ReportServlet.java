@@ -8,24 +8,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-/**
- * Single entry-point for all 9 reports.
- *
- * URL pattern:  /reports?type=<reportType>[&filters...]
- *
- * Report types:
- *   active-sessions      — Report 1
- *   historical-logs      — Report 2
- *   users                — Report 3  (delegates to UserServlet)
- *   top-users            — Report 4a
- *   top-connections      — Report 4b
- *   session-duration     — Report 5
- *   failed-logins        — Report 6
- *   concurrent-sessions  — Report 7
- *   remote-hosts         — Report 8
- *   after-hours          — Report 9
- *   audit-log            — Admin audit trail
- */
+
 @WebServlet("/reports")
 public class ReportServlet extends HttpServlet {
 

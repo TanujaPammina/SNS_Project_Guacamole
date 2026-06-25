@@ -83,3 +83,88 @@ CREATE TABLE IF NOT EXISTS admin_audit_log (
 -- EDIT_ADMIN_USER    Admin user profile/role updated
 -- DELETE_ADMIN_USER  Admin user deleted
 -- CHANGE_PASSWORD    Password changed
+
+
+-- ── 4. Role Report Permissions ────────────────────────────────────────────────
+-- Configurable mapping of which report types each role can access.
+-- SUPER_ADMIN always has access to everything (enforced in code).
+-- This table governs ADMIN and AUDITOR visibility.
+
+CREATE TABLE IF NOT EXISTS role_report_permissions (
+    id          INT          NOT NULL AUTO_INCREMENT,
+    role        ENUM('SUPER_ADMIN','ADMIN','AUDITOR') NOT NULL,
+    report_key  VARCHAR(64)  NOT NULL  COMMENT 'Matches ?type= param in /reports servlet',
+    allowed     TINYINT(1)   NOT NULL  DEFAULT 1,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_role_report (role, report_key),
+    INDEX idx_role (role)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  COMMENT='Configurable per-role report visibility — managed by Super Admin';
+
+
+-- ── 5. Default Permissions ────────────────────────────────────────────────────
+-- SUPER_ADMIN: all reports (stored for completeness; code always grants full access)
+-- ADMIN (IT Admin): all reports including audit-log
+-- AUDITOR: only audit-log by default (configurable)
+
+INSERT IGNORE INTO role_report_permissions (role, report_key, allowed) VALUES
+  -- SUPER_ADMIN — all
+  ('SUPER_ADMIN', 'active-sessions',     1),
+  ('SUPER_ADMIN', 'historical-logs',     1),
+  ('SUPER_ADMIN', 'top-users',           1),
+  ('SUPER_ADMIN', 'top-connections',     1),
+  ('SUPER_ADMIN', 'session-duration',    1),
+  ('SUPER_ADMIN', 'failed-logins',       1),
+  ('SUPER_ADMIN', 'concurrent-sessions', 1),
+  ('SUPER_ADMIN', 'remote-hosts',        1),
+  ('SUPER_ADMIN', 'after-hours',         1),
+  ('SUPER_ADMIN', 'audit-log',           1),
+  -- ADMIN (IT Admin) — all
+  ('ADMIN', 'active-sessions',     1),
+  ('ADMIN', 'historical-logs',     1),
+  ('ADMIN', 'top-users',           1),
+  ('ADMIN', 'top-connections',     1),
+  ('ADMIN', 'session-duration',    1),
+  ('ADMIN', 'failed-logins',       1),
+  ('ADMIN', 'concurrent-sessions', 1),
+  ('ADMIN', 'remote-hosts',        1),
+  ('ADMIN', 'after-hours',         1),
+  ('ADMIN', 'audit-log',           1),
+  -- AUDITOR — only audit-log by default (Super Admin can reconfigure)
+  ('AUDITOR', 'active-sessions',     0),
+  ('AUDITOR', 'historical-logs',     0),
+  ('AUDITOR', 'top-users',           0),
+  ('AUDITOR', 'top-connections',     0),
+  ('AUDITOR', 'session-duration',    0),
+  ('AUDITOR', 'failed-logins',       0),
+  ('AUDITOR', 'concurrent-sessions', 0),
+  ('AUDITOR', 'remote-hosts',        0),
+  ('AUDITOR', 'after-hours',         0),
+  ('AUDITOR', 'audit-log',           1);
+
+
+-- ── 6. Sample Users ───────────────────────────────────────────────────────────
+-- IT Admin user  (username: itadmin / password: Admin@1234)
+INSERT IGNORE INTO admin_users
+    (username, password_hash, full_name, role, active, created_by)
+VALUES (
+    'itadmin',
+    '$2a$12$lfqSEQG2rFyCRskWAbx9JuPr2zypvrL0ui0JBd2i//n8pKWYPm0DK',
+    'IT Admin',
+    'ADMIN',
+    1,
+    'system'
+);
+
+-- Auditor user  (username: auditor / password: Admin@1234)
+INSERT IGNORE INTO admin_users
+    (username, password_hash, full_name, role, active, created_by)
+VALUES (
+    'auditor',
+    '$2a$12$lfqSEQG2rFyCRskWAbx9JuPr2zypvrL0ui0JBd2i//n8pKWYPm0DK',
+    'Auditor',
+    'AUDITOR',
+    1,
+    'system'
+);

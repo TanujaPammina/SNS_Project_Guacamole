@@ -6,53 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for RoleService.
+ *
+ * Note: canViewReports and canViewAuditLog were removed when report visibility
+ * became fully configurable via the role_report_permissions table.
+ * Report-level access is now enforced in RoleFilter using the DB.
+ */
 @DisplayName("RoleService Permission Tests")
 class RoleServiceTest {
-
-    // ── canViewReports ────────────────────────────────────────────────────────
-
-    @Test
-    @DisplayName("canViewReports returns true for active user of any role")
-    void canViewReports_activeUser_returnsTrue() {
-        assertTrue(RoleService.canViewReports(activeUser(Role.SUPER_ADMIN)));
-        assertTrue(RoleService.canViewReports(activeUser(Role.ADMIN)));
-        assertTrue(RoleService.canViewReports(activeUser(Role.AUDITOR)));
-    }
-
-    @Test
-    @DisplayName("canViewReports returns false for null user")
-    void canViewReports_nullUser_returnsFalse() {
-        assertFalse(RoleService.canViewReports(null));
-    }
-
-    @Test
-    @DisplayName("canViewReports returns false for inactive user")
-    void canViewReports_inactiveUser_returnsFalse() {
-        AdminUser u = activeUser(Role.ADMIN);
-        u.setActive(false);
-        assertFalse(RoleService.canViewReports(u));
-    }
-
-    // ── canViewAuditLog ───────────────────────────────────────────────────────
-
-    @Test
-    @DisplayName("canViewAuditLog returns true for SUPER_ADMIN and ADMIN")
-    void canViewAuditLog_adminRoles_returnsTrue() {
-        assertTrue(RoleService.canViewAuditLog(activeUser(Role.SUPER_ADMIN)));
-        assertTrue(RoleService.canViewAuditLog(activeUser(Role.ADMIN)));
-    }
-
-    @Test
-    @DisplayName("canViewAuditLog returns false for AUDITOR")
-    void canViewAuditLog_auditor_returnsFalse() {
-        assertFalse(RoleService.canViewAuditLog(activeUser(Role.AUDITOR)));
-    }
-
-    @Test
-    @DisplayName("canViewAuditLog returns false for null user")
-    void canViewAuditLog_null_returnsFalse() {
-        assertFalse(RoleService.canViewAuditLog(null));
-    }
 
     // ── canManageAdminUsers ───────────────────────────────────────────────────
 
@@ -63,7 +25,7 @@ class RoleServiceTest {
     }
 
     @Test
-    @DisplayName("canManageAdminUsers returns false for ADMIN and AUDITOR")
+    @DisplayName("canManageAdminUsers returns false for IT Admin and Auditor")
     void canManageAdminUsers_lowerRoles_returnsFalse() {
         assertFalse(RoleService.canManageAdminUsers(activeUser(Role.ADMIN)));
         assertFalse(RoleService.canManageAdminUsers(activeUser(Role.AUDITOR)));
@@ -87,7 +49,7 @@ class RoleServiceTest {
     }
 
     @Test
-    @DisplayName("hasRole: ADMIN satisfies ADMIN and AUDITOR but not SUPER_ADMIN")
+    @DisplayName("hasRole: ADMIN (IT Admin) satisfies ADMIN and AUDITOR but not SUPER_ADMIN")
     void hasRole_admin_satisfiesAdminAndAuditor() {
         AdminUser u = activeUser(Role.ADMIN);
         assertFalse(RoleService.hasRole(u, Role.SUPER_ADMIN));

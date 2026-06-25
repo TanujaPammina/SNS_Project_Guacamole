@@ -3,15 +3,15 @@ package com.guacamole.model;
 /**
  * Application roles for the Guacamole Admin portal.
  *
- * SUPER_ADMIN — Full access: reports, audit log, manage admin users & roles.
- * ADMIN       — Access to all reports and audit log. Cannot manage admin users.
- * AUDITOR     — Read-only access to reports only. No audit log, no user management.
+ * SUPER_ADMIN — Full access: reports, audit log, manage admin users & configure permissions.
+ * ADMIN       — "IT Admin" — report access configured by Super Admin via the DB.
+ * AUDITOR     — "Auditor"  — report access configured by Super Admin via the DB.
  */
 public enum Role {
 
     SUPER_ADMIN("Super Admin",  "Full system access including user management"),
-    ADMIN      ("Admin",        "Access to all reports and audit log"),
-    AUDITOR    ("Auditor",      "Read-only access to operational reports");
+    ADMIN      ("IT Admin",     "Access to reports as configured by Super Admin"),
+    AUDITOR    ("Auditor",      "Access to reports as configured by Super Admin");
 
     private final String displayName;
     private final String description;

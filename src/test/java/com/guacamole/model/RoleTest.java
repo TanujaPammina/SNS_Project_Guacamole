@@ -37,7 +37,7 @@ class RoleTest {
     @DisplayName("Role display names are correct")
     void displayNames_areCorrect() {
         assertEquals("Super Admin", Role.SUPER_ADMIN.getDisplayName());
-        assertEquals("Admin",       Role.ADMIN.getDisplayName());
+        assertEquals("IT Admin",    Role.ADMIN.getDisplayName());
         assertEquals("Auditor",     Role.AUDITOR.getDisplayName());
     }
 
