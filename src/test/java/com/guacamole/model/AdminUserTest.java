@@ -64,7 +64,7 @@ class AdminUserTest {
         assertEquals("Super Admin", user.getRoleDisplayName());
 
         user.setRole(Role.ADMIN);
-        assertEquals("Admin", user.getRoleDisplayName());
+        assertEquals("IT Admin", user.getRoleDisplayName());
 
         user.setRole(null);
         assertEquals("Unknown", user.getRoleDisplayName());

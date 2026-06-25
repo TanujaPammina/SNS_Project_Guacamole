@@ -28,8 +28,8 @@ public class DashboardServlet extends HttpServlet {
             req.setAttribute("activeSessions", reportService.getActiveSessions().size());
             req.setAttribute("afterHoursCount", reportService.getAfterHoursSessions().size());
 
-            // Failed login summary only visible to ADMIN+
-            if (RoleService.canViewAuditLog(current)) {
+            // Failed login summary visible to ADMIN and SUPER_ADMIN
+            if (RoleService.hasRole(current, com.guacamole.model.Role.ADMIN)) {
                 req.setAttribute("failedLogins30d",
                         reportService.getFailedLoginSummary()
                                 .stream().mapToInt(f -> f.getFailCount()).sum());

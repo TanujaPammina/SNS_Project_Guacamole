@@ -31,10 +31,16 @@
       <div class="card">
         <div class="card-header">
           <h2>Admin Accounts</h2>
-          <a class="btn btn-primary"
-             href="${pageContext.request.contextPath}/admin/users?action=new">
-            + New Admin User
-          </a>
+          <div style="display:flex;gap:8px">
+            <a class="btn btn-primary"
+               href="${pageContext.request.contextPath}/admin/users?action=new">
+              + New Admin User
+            </a>
+            <a class="btn btn-outline"
+               href="${pageContext.request.contextPath}/admin/report-permissions">
+              Configure Report Permissions
+            </a>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
@@ -117,28 +123,34 @@
 
       <!-- Role legend -->
       <div class="card">
-        <div class="card-header"><h2>Role Permissions</h2></div>
+        <div class="card-header">
+          <h2>Role Permissions</h2>
+          <a class="btn btn-outline" style="font-size:13px"
+             href="${pageContext.request.contextPath}/admin/report-permissions">
+            Configure Report Access →
+          </a>
+        </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Permission</th>
                 <th>Super Admin</th>
-                <th>Admin</th>
+                <th>IT Admin</th>
                 <th>Auditor</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>View all reports</td>
-                <td><span class="badge badge-success">✓</span></td>
-                <td><span class="badge badge-success">✓</span></td>
-                <td><span class="badge badge-success">✓</span></td>
+                <td>View reports (configurable per role)</td>
+                <td><span class="badge badge-success">All reports</span></td>
+                <td><span class="badge badge-info">Configurable</span></td>
+                <td><span class="badge badge-info">Configurable</span></td>
               </tr>
               <tr>
-                <td>View audit log</td>
+                <td>Configure report permissions</td>
                 <td><span class="badge badge-success">✓</span></td>
-                <td><span class="badge badge-success">✓</span></td>
+                <td><span class="badge badge-danger">✗</span></td>
                 <td><span class="badge badge-danger">✗</span></td>
               </tr>
               <tr>
